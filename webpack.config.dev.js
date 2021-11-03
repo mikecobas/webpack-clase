@@ -5,7 +5,7 @@ const CopyPlugin = require('copy-webpack-plugin')
 // const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 // const TerserPlugin = require('terser-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
-
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
         assetModuleFilename: 'assets/images/[hash][ext][query]'
     },
     mode: 'development',
-    watch:true,
+    devtool: 'source-map',
     resolve: {
         // se establece los archivos con los que trabajara
         extensions: ['.js'],
@@ -79,6 +79,7 @@ module.exports = {
             filename:'assets/[name].[contenthash].css'
         }),
         new Dotenv(),
+        new BundleAnalyzerPlugin(),
         new CopyPlugin({
             patterns: [
                 {
@@ -88,11 +89,11 @@ module.exports = {
             ]
         })
     ],
-    // optimization: {
-    //     minimize: true,
-    //     minimizer: [
-    //         new CssMinimizerPlugin(),
-    //         new TerserPlugin()
-    //     ]
-    // }
+    devServer: {
+        static: path.join(__dirname, 'dist'),
+        compress: true,
+        historyApiFallback: true,
+        port: 3006,
+        open:true,
+    },
 }
